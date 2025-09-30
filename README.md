@@ -60,10 +60,10 @@ Cs2_predict/
 ## Локальный запуск
 ```bash
 # API сервер
-uvicorn api.main:app --reload --port 8000
+uvicorn api.service:app --reload --port 8000
 
 # Frontend
-streamlit run frontend/app.py
+streamlit run app/app.py
 ```
 
 ## 🖥️ Веб-интерфейс
