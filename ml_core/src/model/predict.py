@@ -1,9 +1,7 @@
 import joblib
 import numpy as np
 import pandas as pd
-from ml_core.constants.constants import VALUES_TO_REPLACE, DROP_COLUMN_LIST, SCALERS_FOLDER_PATH, MODELS_FOLDER_PATH, \
-    FEATURE_COLUMNS
-from ml_core.src.model.loader import load_scaler, load_model
+from ml_core.constants.constants import VALUES_TO_REPLACE, DROP_COLUMN_LIST, FEATURE_COLUMNS
 from ml_core.src.utils.exceptions import DataTransformationError, FileLoadError
 
 from typing import Optional
@@ -13,8 +11,10 @@ from sklearn.linear_model import LogisticRegression
 def predict_new_data(
         *,
         new_data: pd.DataFrame | list,
-        scaler_path: str | None = SCALERS_FOLDER_PATH,
-        model_path: str | None = MODELS_FOLDER_PATH,
+        loaded_model=None,
+        loaded_scaler=None,
+        scaler_path: str | None = None,
+        model_path: str | None = None,
         can_transform: bool = True,
         use_scaler: bool = True,
 ):
@@ -30,8 +30,9 @@ def predict_new_data(
             df = new_data.copy()
 
         if model_path:
-            last_model_path = load_model(model_path)
-            trained_model = joblib.load(last_model_path)
+            trained_model = joblib.load(model_path)
+        elif loaded_model is not None:
+            trained_model = loaded_model
         else:
             raise FileLoadError(f"Ошибка при загрузке файла с моделью")
 
@@ -46,8 +47,11 @@ def predict_new_data(
 
         # Загрузка и применение скейлера
         if scaler_path and use_scaler:
-            last_scaler_path = load_scaler(scaler_path) # последний (по времени) файл с MinMaxScaler
-            scaler = joblib.load(last_scaler_path)
+            scaler = None
+            if scaler_path:
+                scaler = joblib.load(scaler_path)
+            elif loaded_scaler is not None:
+                scaler = loaded_scaler
             features = FEATURE_COLUMNS
             df[features] = scaler.transform(df[features])
 

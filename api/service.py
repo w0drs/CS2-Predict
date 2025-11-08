@@ -23,6 +23,8 @@ def predict(match: MatchData):
     ]
     prediction = predict_new_data(
         new_data=features,
+        loaded_model=model,
+        loaded_scaler=scaler,
         can_transform=False,
         use_scaler=True
     )[:, 1]

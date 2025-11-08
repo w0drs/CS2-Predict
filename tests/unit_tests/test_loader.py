@@ -3,32 +3,32 @@ from contextlib import nullcontext as does_not_raise
 import pytest
 
 @pytest.mark.parametrize(
-    argnames="folder_path, expectation",
+    argnames="yaml_file, expectation",
     argvalues=[
-        ("scaler/", does_not_raise()),
-        ("empty_folder/", pytest.raises(FileNotFoundError)),
-        ("/folder", pytest.raises(FileNotFoundError))
+        ("model_v1.yaml", does_not_raise()),
+        ("model.yaml", pytest.raises(FileNotFoundError)),
+        ("", pytest.raises(PermissionError))
     ]
 )
-def test_scaler_load(folder_path: str, expectation):
+def test_model_load(yaml_file: str, expectation):
     with expectation:
-        scaler = load_scaler(folder_path)
+        scaler = load_scaler(yaml_file)
         # проверка - существует ли файл
         assert scaler
         # проверка, оканчивается ли файл нужным нам форматом
         assert scaler.endswith(".pkl") or scaler.endswith(".joblib")
 
 @pytest.mark.parametrize(
-    argnames="folder_path, expectation",
+    argnames="yaml_file, expectation",
     argvalues=[
-        ("trained_models/", does_not_raise()),
-        ("empty_folder/", pytest.raises(FileNotFoundError)),
-        ("/folder", pytest.raises(FileNotFoundError))
+        ("model_v1.yaml", does_not_raise()),
+        ("model.yaml", pytest.raises(FileNotFoundError)),
+        ("", pytest.raises(PermissionError))
     ]
 )
-def test_model_load(folder_path: str, expectation):
+def test_model_load(yaml_file: str, expectation):
     with expectation:
-        model = load_model(folder_path)
+        model = load_model(yaml_file)
         # проверка - существует ли файл
         assert model
         # проверка, оканчивается ли файл нужным нам форматом

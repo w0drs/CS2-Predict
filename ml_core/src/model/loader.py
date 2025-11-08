@@ -1,45 +1,27 @@
-from pathlib import Path
-
-from ml_core.constants.constants import SCALERS_FOLDER_PATH, MODELS_FOLDER_PATH
+from ml_core.src.utils.config_loader import load_config
 
 
-def load_scaler(folder_path: str = SCALERS_FOLDER_PATH) -> str:
+def load_scaler(yaml_file: str = "model_v1.yaml") -> str:
     """
-    Загружает из папки scaler последний файл с MinMaxScaler.
-    Возвращает путь до этого скейлера.
-
+    Достает из yaml файла путь до скейлера и возвращает его.
     Raises:
-        FileNotFoundError: Если папка не существует или пуста
+        FileNotFoundError: Если файл не найден
     """
-    folder = Path(folder_path)
-    if not folder.exists():
-        raise FileNotFoundError(f"Папка {folder_path} не существует")
-
-    files = list(folder.iterdir())
-    if not files:
-        raise FileNotFoundError(f"Папка {folder_path} пуста")
-
-    # Сортируем по времени изменения (последний созданный файл)
-    latest_file = max(files, key=lambda x: x.stat().st_mtime)
-    return str(latest_file)
+    model_settings: dict = load_config(yaml_file)
+    scaler_path = model_settings.get("model",{}).get('paths', {}).get("scaler_file", None)
+    if not scaler_path:
+        raise FileNotFoundError(f"Файл скейлера не найден")
+    return str(scaler_path)
 
 
-def load_model(folder_path: str = MODELS_FOLDER_PATH) -> str:
+def load_model(yaml_file: str = "model_v1.yaml") -> str:
     """
-    Загружает из папки trained_models последний файл с обученной моделью.
-    Возвращает путь до этой модели.
-
+    Достает из yaml файла путь до обученной модели и возвращает его.
     Raises:
-        FileNotFoundError: Если папка не существует или пуста
+        FileNotFoundError: Если файл не найден
     """
-    folder = Path(folder_path)
-    if not folder.exists():
-        raise FileNotFoundError(f"Папка {folder_path} не существует")
-
-    files = list(folder.iterdir())
-    if not files:
-        raise FileNotFoundError(f"Папка {folder_path} пуста")
-
-    # Сортируем по времени изменения (последний созданный файл)
-    latest_file = max(files, key=lambda x: x.stat().st_mtime)
-    return str(latest_file)
+    model_settings: dict = load_config(yaml_file)
+    model_path = model_settings.get("model", {}).get('paths', {}).get("model_file", None)
+    if not model_path:
+        raise FileNotFoundError(f"Файл модели не найден")
+    return str(model_path)

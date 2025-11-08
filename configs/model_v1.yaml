@@ -1,0 +1,11 @@
+model:
+  name: "cs2_win_predictor"
+  version: "1.0.0"
+  parameters:
+    C: 0.007294894989290226
+    penalty: 'l1'
+    solver: 'saga'
+    random_state: 42
+  paths:
+    model_file: "trained_models/model_2025-11-04_01-28-05.pkl"
+    scaler_file: "scaler/scaler_2025-11-04_01-28-05.pkl"
