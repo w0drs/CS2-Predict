@@ -4,7 +4,6 @@ from ml_core.src.model.train_model import train_model
 from ml_core.src.utils.config_loader import load_model_params
 from ml_core.src.utils.exceptions import DataLoadError
 
-
 def main():
     """
     Главный файл с обучением и сохранением модели и выведением метрик

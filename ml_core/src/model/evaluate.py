@@ -6,7 +6,6 @@ from ml_core.constants.constants import THRESHOLD
 from ml_core.src.model.loader import load_model, load_scaler
 from ml_core.src.model.predict import predict_new_data
 
-
 def evaluate_model(
         X_test: np.ndarray | pd.DataFrame,
         y_test: np.ndarray | pd.DataFrame | pd.Series,
@@ -27,9 +26,9 @@ def evaluate_model(
     )
     y_scores = probabilities[:, 1]
     y_pred_high_precision = (y_scores >= THRESHOLD).astype(int)
-
+    report = classification_report(y_test, y_pred_high_precision)
     print(f"Precision: {precision_score(y_test, y_pred_high_precision):.4f}")
     print(f"Recall: {recall_score(y_test, y_pred_high_precision):.4f}")
-    print(classification_report(y_test, y_pred_high_precision))
+    print(report)
 
-    return y_pred_high_precision
+    return report
